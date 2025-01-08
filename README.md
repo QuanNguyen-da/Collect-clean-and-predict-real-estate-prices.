@@ -58,7 +58,7 @@ Dữ liệu không có giá trị bị thiếu
    5. Xử lý các giá trị Ngày tháng
 #### Cụ thể
 ##### 1. Kiểm tra các giá trị thiếu
-       Đã kiểm tra ở trên bằng Python
+       Đã kiểm tra ở trên bằng Python.[Đây](#Kiểm-tra-giá-trị-bị-thiếu)
        
 ##### 2. Loại bỏ các cột không cần thiết
 ```bash
