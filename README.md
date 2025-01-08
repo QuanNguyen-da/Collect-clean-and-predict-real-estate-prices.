@@ -58,7 +58,7 @@ Dữ liệu không có giá trị bị thiếu
 ```
 ##### 3. Định dạng lại kiểu dữ liệu cho đồng nhất
 
-3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
+###### 3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
 ```bash
       update mogiok
       set Bathroom = cast(substring(bathroom,1,charindex('WC',BathRoom)-1) as int)
@@ -73,7 +73,7 @@ Dữ liệu không có giá trị bị thiếu
       set Area =cast(substring(Area,1,charindex('m2',Area)-1) as int)
 ```
 
-3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
+###### 3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
 
 ```bash
    --Lấy ra thành phố từ cột Address
