@@ -15,8 +15,7 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
    
 ## Thu thập dữ liệu 
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
-<details>
-  <summary>
+
 1. Những thư viện cần thiết:
    ```bash
               import requests
@@ -45,7 +44,7 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
             <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="350">
         </p>
 Dữ liệu không có giá trị bị thiếu
-</summary>
+
 ## Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
 #### Một số vấn đề cần xử lý như sau
