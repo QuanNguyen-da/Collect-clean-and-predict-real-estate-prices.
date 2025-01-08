@@ -1,11 +1,18 @@
 # Collecting + Cleaning + Building predict-real-estate-prices model
 
-## Tính cấp thiết của vấn đề
+## Tính cấp thiết của vấn đề 🚨 🚨 🚨
 
 Bất động sản đóng vai trò quan trọng trong nền kinh tế Việt Nam, với ảnh hưởng lớn đến các ngành như công nghiệp, nông nghiệp và dịch vụ. Ngành này không chỉ tạo ra nguồn thu lớn cho ngân sách nhà nước mà còn giải quyết việc làm cho một lượng lao động đáng kể. Tuy nhiên, thị trường bất động sản thường xuyên biến động do các yếu tố như lạm phát, lãi suất, và chính sách phát triển, đặc biệt trong những năm qua do tác động của đại dịch Covid-19. 
 
 Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số, dẫn đến nhu cầu nhà ở ngày càng tăng. Tuy nhiên, quỹ đất của thành phố rất hạn chế. Việc định giá bất động sản phụ thuộc vào nhiều yếu tố như thị trường, thị yếu người tiêu dùng, diện tích, vị trí căn hộ, hướng, tầm nhìn và khoảng cách đến các tiện ích xã hội. Những yếu tố này ảnh hưởng trực tiếp đến giá bán nhà ở. Do đó việc nghiên cứu và phân tích các yếu tố ảnh hưởng đến giá bất động sản tại nơi đây là cần thiết để dự báo xu hướng thị trường và hỗ trợ các quyết định đầu tư, phát triển và quản lý bất động sản, từ đó đóng góp vào sự phát triển bền vững của xã hội và môi trường.
 
+## Tổng quan quy trình thực hiện  🎯🎯🎯
+1. Thu thập dữ liệu
+2. Tiền xử lý dữ liệu
+3. Khai thác mối quan hệ giữa các biến tác động
+4. Xây dựng mô hình dự báo
+5. Xây dựng web để người dùng dự đoán giá
+   
 ## Thu thập dữ liệu 
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 1. Những thư viện cần thiết:
