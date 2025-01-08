@@ -58,20 +58,62 @@ Dữ liệu không có giá trị bị thiếu
 ```
 ##### 3. Định dạng lại kiểu dữ liệu cho đồng nhất
 
-Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ.
+3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
 ```bash
-            update mogiok
+      update mogiok
       set Bathroom = cast(substring(bathroom,1,charindex('WC',BathRoom)-1) as int)
+
+      delete from mogiok
+      where bedroom not like N'%PN%'
+      update mogiok
+      set bedroom =   cast(substring(BedRoom, 1, charindex('PN',BedRoom)-1) as int)
       
       --Cập nhật lại dientich 
       update mogiok
       set Area =cast(substring(Area,1,charindex('m2',Area)-1) as int)
-      
-      --Thêm cột Address_final
-      alter table mogiok
-      add address_final nvarchar(100)
-      
 ```
 
+3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
+
+```bash
+   --Lấy ra thành phố từ cột Address
+   update mogiok
+   set address_final  = SUBSTRING(address, CHARINDEX('Quận', address) + 5, CHARINDEX(',', address) - (CHARINDEX('Quận', address) + 5))
+
+   --Mã hóa
+   SELECT DISTINCT address_final
+   FROM mogiok;
+   
+   update  mogiok
+   set address_final=N'Hòa Vang'
+   where address_final like N'n Hoà Vang'
+   
+   alter table mogiok
+   add  Address_ma_hoa int
+
+   UPDATE mogiok
+   SET Address_ma_hoa = CASE 
+       WHEN address_final = N'HảiChâu' THEN 1
+       WHEN address_final = N'LiênChiểu' THEN 2
+       WHEN address_final = N'NgũHànhSơn' THEN 3
+       WHEN address_final = N'CẩmLệ' THEN 4
+       WHEN address_final = N'SơnTrà' THEN 5
+       WHEN address_final = N'ThanhKhê' THEN 6
+       WHEN address_final = N'Hòa Vang' THEN 7
+       ELSE NULL
+   END;
+```
+
+##### 4. Xử lý các giá trị Giá
+Thực hiện việc tách và cắt để lấy các phần tử Tỷ, Triệu, Nghìn để chuyển về Tiền tệ và cộng chúng lại.
+Sử dụng các hàm như:`Charindex`, `Substring` và `Cast`.
+Ví dụ cho hàng Tỷ:
+```bash
+   update mogiok
+   set billion =  case when price not like N'%tỷ%' and price like N'%triệu%' then 0
+					when price like N'%tỷ%'   then cast(substring(price, 1, CHARINDEX(N'tỷ',price) -1) as numeric(15,0))
+   end
+```
+Tương tự cho các hàng còn lại. 
 
 
