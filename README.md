@@ -8,7 +8,7 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
 
 ## Tổng quan quy trình thực hiện 🎯🎯🎯
 1. [Thu thập dữ liệu](#Thu-thập-dữ-liệu)
-2. Tiền xử lý dữ liệu
+2. [Tiền xử lý dữ liệu](#Tiền-xử-lý-dữ-liệu)
 3. Khai thác mối quan hệ giữa các biến tác động
 4. Xây dựng mô hình dự báo
 5. Xây dựng web để người dùng dự đoán giá
@@ -44,8 +44,6 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
         </p>
 Dữ liệu không có giá trị bị thiếu
 
-   
-      
 ## Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
 #### Một số vấn đề cần xử lý như sau
