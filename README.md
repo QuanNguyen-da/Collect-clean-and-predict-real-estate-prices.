@@ -10,9 +10,9 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 1. Những thư viện cần thiết:
    ```bash
-           import requests
-           import pandas as pd
-           from bs4 import BeautifulSoup
+              import requests
+              import pandas as pd
+              from bs4 import BeautifulSoup
    ```
 2. Những thông tin cần thu thập:
    ```bash
@@ -26,7 +26,7 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
             bathroom = attributes[2].strip()
    ```
 
-   3. Kết quả thu thập gồm 10.211 mẫu tại Đà Nẵng được đăng bán từ 2021-nay có dạng như sau:
+3. Kết quả thu thập gồm 10.211 mẫu tại Đà Nẵng được đăng bán từ 2021-nay có dạng như sau:
         <p align="center">
             <img src="https://github.com/user-attachments/assets/b2beff85-9d4a-4b6e-adbe-eef34517750e" alt="image" width="450">
         </p>
