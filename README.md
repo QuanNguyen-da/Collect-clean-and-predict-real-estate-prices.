@@ -33,7 +33,7 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
         
 4. Kiểm tra giá trị bị thiếu
     <p align="center">
-            <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="450">
+            <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="350">
         </p>
 Dữ liệu không có giá trị bị thiếu
 
@@ -110,10 +110,16 @@ Sử dụng các hàm như:`Charindex`, `Substring` và `Cast`.
 Ví dụ cho hàng Tỷ:
 ```bash
    update mogiok
-   set billion =  case when price not like N'%tỷ%' and price like N'%triệu%' then 0
-					when price like N'%tỷ%'   then cast(substring(price, 1, CHARINDEX(N'tỷ',price) -1) as numeric(15,0))
-   end
+   set billion =  case
+			when price not like N'%tỷ%' and price like N'%triệu%' then 0
+			when price like N'%tỷ%'   then cast(substring(price, 1, CHARINDEX(N'tỷ',price) -1) as numeric(15,0))
+		  end
 ```
 Tương tự cho các hàng còn lại. 
+Sau khi tiền xử lý, dữ liệu có dạng như sau:
+  <p align="center">
+            <img src="https://github.com/user-attachments/assets/dd32d7a6-12e0-43a9-bc61-cb977a979de8" alt="image" width="450">
+   </p>
+
 
 
