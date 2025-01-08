@@ -9,14 +9,15 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
 ## Thu thập dữ liệu 
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 1. Những thư viện cần thiết:
-   ``bash
+   ```bash
+   
      import requests
      import pandas as pd
      from bs4 import BeautifulSoup
    ```
-2. Những thông tin cần thu thập:
+3. Những thông tin cần thu thập:
    ```bash
-           link = house.find('a', class_="link-overlay")['href']
+            link = house.find('a', class_="link-overlay")['href']
             title = house.find('h2', class_="prop-title").text.strip()
             addr = house.find('div', class_="prop-addr").text.strip()
             price = house.find('div', class_="price").text.strip()
