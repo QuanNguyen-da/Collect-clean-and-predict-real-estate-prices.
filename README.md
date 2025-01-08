@@ -30,9 +30,48 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
         <p align="center">
             <img src="https://github.com/user-attachments/assets/b2beff85-9d4a-4b6e-adbe-eef34517750e" alt="image" width="450">
         </p>
+        
+4. Kiểm tra giá trị bị thiếu
+    <p align="center">
+            <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="450">
+        </p>
+Dữ liệu không có giá trị bị thiếu
 
+   
       
 ## Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
+#### Một số vấn đề cần xử lý như sau
+   1. Kiểm tra các giá trị thiếu 
+   2. Loại bỏ các cột không cần thiết
+   3. Định dạng lại kiểu dữ liệu cho đồng nhất
+   4. Xử lý các giá trị Giá
+   5. Xử lý các giá trị Ngày tháng
+#### Cụ thể
+##### 1. Kiểm tra các giá trị thiếu
+       Đã kiểm tra ở trên bằng Python
+       
+##### 2. Loại bỏ các cột không cần thiết
+```bash
+   ALTER TABLE mogi
+   DROP COLUMN Link, Title;
+```
+##### 3. Định dạng lại kiểu dữ liệu cho đồng nhất
+
+Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ.
+```bash
+            update mogiok
+      set Bathroom = cast(substring(bathroom,1,charindex('WC',BathRoom)-1) as int)
+      
+      --Cập nhật lại dientich 
+      update mogiok
+      set Area =cast(substring(Area,1,charindex('m2',Area)-1) as int)
+      
+      --Thêm cột Address_final
+      alter table mogiok
+      add address_final nvarchar(100)
+      
+```
+
 
 
