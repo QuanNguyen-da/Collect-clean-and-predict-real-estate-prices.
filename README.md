@@ -40,6 +40,9 @@ Thành phố Đà Nẵng đang phát triển nhanh về kinh tế và dân số,
         </p>
         
 4. Kiểm tra giá trị bị thiếu
+   ```bash
+   	df.info()
+   ```
     <p align="center">
             <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="350">
         </p>
