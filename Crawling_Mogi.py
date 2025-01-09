@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 data = []
 
 for page in range(1, 683):
-    url = f'https://mogi.vn/da-nang/mua-nha-dat?cp={page}'
+    url = f'https://mogi.vn/mua-nha-dat?cp={page}'
     response = requests.get(url)
     
     if response.status_code == 200:
