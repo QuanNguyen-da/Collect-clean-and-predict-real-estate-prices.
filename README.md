@@ -128,7 +128,7 @@ Tương tự cho các hàng còn lại.
 ##### 2.5 Mã hóa các cột địa chỉ thành số
 Kết quả như sau: 
 <p align="center">
-            <img src="(https://github.com/user-attachments/assets/c5e8aa82-bf70-44e2-a5ae-5b52b31ae1b6" alt="image" width="350">
+            <img src="https://github.com/user-attachments/assets/19359428-2897-4777-a570-c0843e83f993" alt="image" width="450">
         </p>
 
 ## 3. Xây dựng mô hình dự đoán
