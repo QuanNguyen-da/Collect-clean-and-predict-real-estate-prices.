@@ -9,19 +9,19 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
 ## Tổng quan quy trình thực hiện 🎯🎯🎯
 1. [Thu thập dữ liệu](#Thu-thập-dữ-liệu)
 2. [Tiền xử lý dữ liệu](#Tiền-xử-lý-dữ-liệu)
-3. Xây dựng mô hình dự báo
+3. [Xây dựng mô hình dự đoán](#Xây-dựng-mô-hình-dự-đoán)
 4. Xây dựng web để người dùng dự đoán giá
    
-## Thu thập dữ liệu 
+## 1. Thu thập dữ liệu 
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 
-1. Những thư viện cần thiết:
+1.1. Những thư viện cần thiết:
    ```bash
               import requests
               import pandas as pd
               from bs4 import BeautifulSoup
    ```
-2. Những thông tin cần thu thập:
+1.2. Những thông tin cần thu thập:
    ```bash
             link = house.find('a', class_="link-overlay")['href']
             title = house.find('h2', class_="prop-title").text.strip()
@@ -33,12 +33,12 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
             bathroom = attributes[2].strip()
    ```
 
-3. Kết quả thu thập gồm 10.799 mẫu được đăng bán từ 2021-nay có dạng như sau:
+1.3. Kết quả thu thập gồm 10.799 mẫu được đăng bán từ 2021-nay có dạng như sau:
         <p align="center">
             <img src="https://github.com/user-attachments/assets/b2beff85-9d4a-4b6e-adbe-eef34517750e" alt="image" width="450">
         </p>
         
-4. Kiểm tra giá trị bị thiếu
+1.4. Kiểm tra giá trị bị thiếu
    ```bash
    	df.info()
    ```
@@ -47,26 +47,26 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
         </p>
 Dữ liệu không có giá trị bị thiếu
 
-## Tiền xử lý dữ liệu
+##2.  Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
 #### Một số vấn đề cần xử lý như sau
-   1. Kiểm tra các giá trị thiếu 
-   2. Loại bỏ các cột không cần thiết
-   3. Định dạng lại kiểu dữ liệu cho đồng nhất
-   4. Xử lý các giá trị Giá
-   5. Xử lý các giá trị Ngày tháng
+   2.1. Kiểm tra các giá trị thiếu 
+   2.2. Loại bỏ các cột không cần thiết
+   2.3. Định dạng lại kiểu dữ liệu cho đồng nhất
+   2.4. Xử lý các giá trị Giá
+   2.5. Xử lý các giá trị Ngày tháng
 #### Cụ thể
-##### 1. Kiểm tra các giá trị thiếu
+##### 2.1. Kiểm tra các giá trị thiếu
        Đã kiểm tra ở trên bằng Python.
        
-##### 2. Loại bỏ các cột không cần thiết
+##### 2.2. Loại bỏ các cột không cần thiết
 ```bash
    ALTER TABLE mogi
    DROP COLUMN Link, Title;
 ```
-##### 3. Định dạng lại kiểu dữ liệu cho đồng nhất
+##### 2.3. Định dạng lại kiểu dữ liệu cho đồng nhất
 
-###### 3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
+###### 2.3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
 ```bash
       update mogiok
       set Bathroom = cast(substring(bathroom,1,charindex('WC',BathRoom)-1) as int)
@@ -81,7 +81,7 @@ Dữ liệu không có giá trị bị thiếu
       set Area =cast(substring(Area,1,charindex('m2',Area)-1) as int)
 ```
 
-###### 3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
+###### 2.3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
 
 ```bash
    --Lấy ra thành phố từ cột Address
@@ -112,7 +112,7 @@ Dữ liệu không có giá trị bị thiếu
    END;
 ```
 
-##### 4. Xử lý các giá trị Giá
+##### 2.4. Xử lý các giá trị Giá
 Thực hiện việc tách và cắt để lấy các phần tử Tỷ, Triệu, Nghìn để chuyển về Tiền tệ và cộng chúng lại.
 Sử dụng các hàm như:`Charindex`, `Substring` và `Cast`.
 Ví dụ cho hàng Tỷ:
@@ -128,6 +128,63 @@ Sau khi tiền xử lý, dữ liệu có dạng như sau:
   <p align="center">
             <img src="https://github.com/user-attachments/assets/dd32d7a6-12e0-43a9-bc61-cb977a979de8" alt="image" width="450">
    </p>
+
+## 3. Xây dựng mô hình dự đoán
+Đầu tiên, ta chuẩn bị môi trường để thực hiện các tác vụ liên quan đến mô hình cây quyết định và đánh giá hiệu suất của nó trong bài toán phân loại, bao gồm:
+
++ Thư viện pandas
++ Thư viện Matplotlib.pyplot, seaborn để vẽ biểu đồ và đồ thị.
++ Import module model_selection từ thư viện scikit-learn. Module này thường được sử dụng để chia dữ liệu thành các tập huấn luyện và tập kiểm tra.
++ Import hàm classification_report từ module metrics trong scikit-learn. Hàm này cung cấp báo cáo chi tiết về hiệu suất của mô hình phân loại.
++ Import hàm accuracy_score từ module metrics trong scikit-learn. Hàm này tính toán độ chính xác của mô hình.
+
+```bash
+	import pandas as pd
+	import numpy as np
+	import matplotlib.pyplot as plt
+	import seaborn as sns
+	from sklearn import linear_model
+```
+Bộ dữ liệu này có 10796 dòng với 5 cột lần lượt là Diện tích (Area) – Địa chỉ (Address) – Số phòng ngủ (Bedroom) – Số phòng tắm (Bathroom) – Giá nhà (Price).
+
+Mã hoá 13 tỉnh/thành phố ở cột “Address” về dạng số (từ 0 đến 12), ta được bảng mới như sau:
+```bash
+	df['Address']=df['Address'].astype('category')
+	df['Address']=df['Address'].cat.codes
+```
+Tiếp theo xem xét mối quan hệ tương quan, tác động lẫn nhau giữa các biến. 
+
+Sau đó gán mức giá của các ngôi nhà ở cột “Price” cho 3 nhãn “Low”, “Medium” và “High” lần lượt là các mức giá thấp, trung bình, cao và tạo thêm cột mới “price_label” với quy định:
++ Ngôi nhà có mức giá thấp (Low) sẽ có giá dưới 10 tỷ đồng.
++ Ngôi nhà có mức giá trung bình (Medium) có giá từ 10-50 tỷ đồng.
++ Ngôi nhà có mức giá cao (High) có giá trên 50 tỷ đồng.
+
+Số giá trị ở mỗi phân lớp như sau:
++ Có 6192 ngôi nhà có mức giá thấp.
++ Có 3585 ngôi nhà có mức giá trung bình.
++ Có 1019 ngôi nhà có mức giá cao.
+  
+Thực hiện xây dựng mô hình dự đoán - Sử dụng mô hình Cây quyết định
++ Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 30% dữ liệu sẽ được sử dụng trong bộ kiểm tra. Tham số Random_state được sử dụng để đảm bảo rằng việc phân chia có thể lặp lại được.
+ ```bash
+	from sklearn.model_selection import train_test_split
+	
+	array = data.values
+	X = array[:, 0:4]
+	Y = array[:, 4]
+	X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
+```
+Lớp DecisionTreeClassifier được nhập từ mô-đun sklearn.tree. Lớp này thực hiện phân loại cây quyết định:
+```bash
+	from sklearn import tree
+	
+	decision_tree = tree.DecisionTreeClassifier(criterion='gini')
+	decision_tree.fit(X_train, Y_train)
+```
+Để kiểm tra độ chính xác, ta in ra dòng kiểm tra độ chính xác của bộ phân loại cây quyết định trên dữ liệu huấn luyện. Phương thức Decision_tree.score() được sử dụng để tính toán độ chính xác. Công cụ xác định định dạng .2f được sử dụng để định dạng giá trị chính xác đến hai chữ số thập phân.
+
+Kết quả thu được cho thấy, độ chính xác cho mô hình này dựa trên tập huấn luyện là rất cao (93%) và tập kiểm tra cũng không hề thấp (84%).
+
 
 
 
