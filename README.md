@@ -35,9 +35,9 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
 
 1.3. Kết quả thu thập gồm 10.799 mẫu được đăng bán từ 2021-nay có dạng như sau:
         <p align="center">
-            <img src="https://github.com/user-attachments/assets/b2beff85-9d4a-4b6e-adbe-eef34517750e" alt="image" width="450">
+            <img src="https://github.com/user-attachments/assets/42824589-1ea6-4e04-bf20-f50b9c6d3c19" alt="image" width="450">
         </p>
-        
+
 1.4. Kiểm tra giá trị bị thiếu
    ```bash
    	df.info()
