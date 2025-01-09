@@ -124,10 +124,12 @@ Ví dụ cho hàng Tỷ:
 		  end
 ```
 Tương tự cho các hàng còn lại. 
-Sau khi tiền xử lý, dữ liệu có dạng như sau:
-  <p align="center">
-            <img src="https://github.com/user-attachments/assets/dd32d7a6-12e0-43a9-bc61-cb977a979de8" alt="image" width="450">
-   </p>
+
+##### 2.5 Mã hóa các cột địa chỉ thành số
+Kết quả như sau: 
+<p align="center">
+            <img src="(https://github.com/user-attachments/assets/c5e8aa82-bf70-44e2-a5ae-5b52b31ae1b6" alt="image" width="350">
+        </p>
 
 ## 3. Xây dựng mô hình dự đoán
 Đầu tiên, ta chuẩn bị môi trường để thực hiện các tác vụ liên quan đến mô hình cây quyết định và đánh giá hiệu suất của nó trong bài toán phân loại, bao gồm:
