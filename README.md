@@ -9,9 +9,8 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
 ## Tổng quan quy trình thực hiện 🎯🎯🎯
 1. [Thu thập dữ liệu](#Thu-thập-dữ-liệu)
 2. [Tiền xử lý dữ liệu](#Tiền-xử-lý-dữ-liệu)
-3. Khai thác mối quan hệ giữa các biến tác động
-4. Xây dựng mô hình dự báo
-5. Xây dựng web để người dùng dự đoán giá
+3. Xây dựng mô hình dự báo
+4. Xây dựng web để người dùng dự đoán giá
    
 ## Thu thập dữ liệu 
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
