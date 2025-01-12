@@ -157,7 +157,7 @@ Bộ dữ liệu này có 10796 dòng với 5 cột lần lượt là:
 
 Mã hoá 13 tỉnh/thành phố ở cột “Address” về dạng số (từ 0 đến 12), ta được bảng mới như sau:
 
-```bash
+```python
 	df['Address']=df['Address'].astype('category')
 	df['Address']=df['Address'].cat.codes
 ```
@@ -177,24 +177,7 @@ Số giá trị ở mỗi phân lớp như sau:
 - Bởi vì đây là bài toán dự đoán giá bất động sản nên kết quả đầu ra sẽ là các giá trị tiền tệ tương ứng với dữ liệu đầu vào, việc sử dụng các mô hình phân lớp Classification là không hợp lý. Chính vì thế nên chọn mô hình XGBRegressor.
 
 + Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 30% dữ liệu sẽ được sử dụng trong bộ kiểm tra. Tham số Random_state được sử dụng để đảm bảo rằng việc phân chia có thể lặp lại được.
- ```bash
-	from sklearn.model_selection import train_test_split
-	
-	array = data.values
-	X = array[:, 0:4]
-	Y = array[:, 4]
-	X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
-```
-Lớp DecisionTreeClassifier được nhập từ mô-đun sklearn.tree. Lớp này thực hiện phân loại cây quyết định:
-```bash
-	from sklearn import tree
-	
-	decision_tree = tree.DecisionTreeClassifier(criterion='gini')
-	decision_tree.fit(X_train, Y_train)
-```
-Để kiểm tra độ chính xác, ta in ra dòng kiểm tra độ chính xác của bộ phân loại cây quyết định trên dữ liệu huấn luyện. Phương thức Decision_tree.score() được sử dụng để tính toán độ chính xác. Công cụ xác định định dạng .2f được sử dụng để định dạng giá trị chính xác đến hai chữ số thập phân.
 
-Kết quả thu được cho thấy, độ chính xác cho mô hình này dựa trên tập huấn luyện là rất cao (93%) và tập kiểm tra cũng không hề thấp (84%).
 
 
 
