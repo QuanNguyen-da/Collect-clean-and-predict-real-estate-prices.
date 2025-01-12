@@ -129,13 +129,8 @@ Ví dụ cho hàng Tỷ:
 			when price like N'%tỷ%'   then cast(substring(price, 1, CHARINDEX(N'tỷ',price) -1) as numeric(15,0))
 		  end
 ```
-Tương tự cho các hàng còn lại. 
+Tương tự cho các hàng còn lại. Có thể tham khảo cụ thể hơn ở file Pre-processing.sql
 
-#### 2.5 Mã hóa các cột địa chỉ thành số
-Kết quả như sau: 
-<p align="center">
-            <img src="https://github.com/user-attachments/assets/19359428-2897-4777-a570-c0843e83f993" alt="image" width="450">
-        </p>
 
 ## 3. Xây dựng mô hình dự đoán
 Đầu tiên, ta chuẩn bị môi trường để thực hiện các tác vụ liên quan đến mô hình cây quyết định và đánh giá hiệu suất của nó trong bài toán phân loại, bao gồm:
@@ -146,7 +141,7 @@ Kết quả như sau:
 + Import hàm classification_report từ module metrics trong scikit-learn. Hàm này cung cấp báo cáo chi tiết về hiệu suất của mô hình phân loại.
 + Import hàm accuracy_score từ module metrics trong scikit-learn. Hàm này tính toán độ chính xác của mô hình.
 
-```bash
+```python
 	import pandas as pd
 	import numpy as np
 	import matplotlib.pyplot as plt
