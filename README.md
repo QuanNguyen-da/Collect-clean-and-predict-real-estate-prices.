@@ -16,13 +16,13 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 
 1.1. Những thư viện cần thiết:
-   ```bash
+   ```sql
               import requests
               import pandas as pd
               from bs4 import BeautifulSoup
    ```
 1.2. Những thông tin cần thu thập:
-   ```bash
+   ```sql
             link = house.find('a', class_="link-overlay")['href']
             title = house.find('h2', class_="prop-title").text.strip()
             addr = house.find('div', class_="prop-addr").text.strip()
@@ -39,35 +39,39 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
         </p>
 
 1.4. Kiểm tra giá trị bị thiếu
-   ```bash
-   	df.info()
-   ```
-    <p align="center">
+    	<p align="center">
             <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="350">
         </p>
+	
 Dữ liệu không có giá trị bị thiếu
 
-##2.  Tiền xử lý dữ liệu
+## 2.  Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
 #### Một số vấn đề cần xử lý như sau
    2.1. Kiểm tra các giá trị thiếu 
+   
    2.2. Loại bỏ các cột không cần thiết
+   
    2.3. Định dạng lại kiểu dữ liệu cho đồng nhất
+   
    2.4. Xử lý các giá trị Giá
+   
    2.5. Xử lý các giá trị Ngày tháng
+   
 #### Cụ thể
 ##### 2.1. Kiểm tra các giá trị thiếu
        Đã kiểm tra ở trên bằng Python.
        
 ##### 2.2. Loại bỏ các cột không cần thiết
-```bash
+```sql
    ALTER TABLE mogi
    DROP COLUMN Link, Title;
 ```
 ##### 2.3. Định dạng lại kiểu dữ liệu cho đồng nhất
 
 ###### 2.3.1 Bởi vì các cột như Số phòng tắm, Số phòng ngủ và Diện tích có các ký tự văn bản lẫn vào nên cần loại bỏ và đồng nhất kiểu dữ liệu là int
-```bash
+
+```sql
       update mogiok
       set Bathroom = cast(substring(bathroom,1,charindex('WC',BathRoom)-1) as int)
 
@@ -83,7 +87,7 @@ Dữ liệu không có giá trị bị thiếu
 
 ###### 2.3.2 Cột Địa chỉ gồm Quận, Thành phố nên chỉ lấy Quận và Mã hóa thành dạng số để thuận tiện cho việc xây dựng mô hình dự đoán
 
-```bash
+```sql
    --Lấy ra thành phố từ cột Address
    update mogiok
    set address_final  = SUBSTRING(address, CHARINDEX('Quận', address) + 5, CHARINDEX(',', address) - (CHARINDEX('Quận', address) + 5))
@@ -114,9 +118,11 @@ Dữ liệu không có giá trị bị thiếu
 
 ##### 2.4. Xử lý các giá trị Giá
 Thực hiện việc tách và cắt để lấy các phần tử Tỷ, Triệu, Nghìn để chuyển về Tiền tệ và cộng chúng lại.
+
 Sử dụng các hàm như:`Charindex`, `Substring` và `Cast`.
+
 Ví dụ cho hàng Tỷ:
-```bash
+```sql
    update mogiok
    set billion =  case
 			when price not like N'%tỷ%' and price like N'%triệu%' then 0
@@ -125,7 +131,7 @@ Ví dụ cho hàng Tỷ:
 ```
 Tương tự cho các hàng còn lại. 
 
-##### 2.5 Mã hóa các cột địa chỉ thành số
+#### 2.5 Mã hóa các cột địa chỉ thành số
 Kết quả như sau: 
 <p align="center">
             <img src="https://github.com/user-attachments/assets/19359428-2897-4777-a570-c0843e83f993" alt="image" width="450">
@@ -147,9 +153,15 @@ Kết quả như sau:
 	import seaborn as sns
 	from sklearn import linear_model
 ```
-Bộ dữ liệu này có 10796 dòng với 5 cột lần lượt là Diện tích (Area) – Địa chỉ (Address) – Số phòng ngủ (Bedroom) – Số phòng tắm (Bathroom) – Giá nhà (Price).
+Bộ dữ liệu này có 10796 dòng với 5 cột lần lượt là:
+- Diện tích (Area)
+- Địa chỉ (Address)
+- Số phòng ngủ (Bedroom)
+- Số phòng tắm (Bathroom)
+- Giá nhà (Price).
 
 Mã hoá 13 tỉnh/thành phố ở cột “Address” về dạng số (từ 0 đến 12), ta được bảng mới như sau:
+
 ```bash
 	df['Address']=df['Address'].astype('category')
 	df['Address']=df['Address'].cat.codes
@@ -166,7 +178,9 @@ Số giá trị ở mỗi phân lớp như sau:
 + Có 3585 ngôi nhà có mức giá trung bình.
 + Có 1019 ngôi nhà có mức giá cao.
   
-Thực hiện xây dựng mô hình dự đoán - Sử dụng mô hình Cây quyết định
+#### Thực hiện xây dựng mô hình dự đoán 
+- Bởi vì đây là bài toán dự đoán giá bất động sản nên kết quả đầu ra sẽ là các giá trị tiền tệ tương ứng với dữ liệu đầu vào, việc sử dụng các mô hình phân lớp Classification là không hợp lý. Chính vì thế nên chọn mô hình XGBRegressor.
+
 + Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 30% dữ liệu sẽ được sử dụng trong bộ kiểm tra. Tham số Random_state được sử dụng để đảm bảo rằng việc phân chia có thể lặp lại được.
  ```bash
 	from sklearn.model_selection import train_test_split
