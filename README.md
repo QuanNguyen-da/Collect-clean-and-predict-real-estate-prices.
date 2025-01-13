@@ -16,13 +16,13 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
 ### Sử dụng Python để thu thập dữ liệu từ web Bất động sản: Mogi.vn
 
 1.1. Những thư viện cần thiết:
-   ```sql
+   ```python
               import requests
               import pandas as pd
               from bs4 import BeautifulSoup
    ```
 1.2. Những thông tin cần thu thập:
-   ```sql
+   ```python
             link = house.find('a', class_="link-overlay")['href']
             title = house.find('h2', class_="prop-title").text.strip()
             addr = house.find('div', class_="prop-addr").text.strip()
@@ -43,7 +43,7 @@ Việc định giá bất động sản phụ thuộc vào nhiều yếu tố nh
             <img src="https://github.com/user-attachments/assets/d76baccf-5d59-44c6-b57b-7f4b0fb40348" alt="image" width="350">
         </p>
 	
-Dữ liệu không có giá trị bị thiếu
+Dữ liệu cột Price chứa 2 giá trị null, vì số lượng rất nhỏ so với số lượng mẫu nên thực hiện xóa. 
 
 ## 2.  Tiền xử lý dữ liệu
 ### Sử dụng SQL để tiền xử lý dữ liệu
@@ -65,7 +65,7 @@ Dữ liệu không có giá trị bị thiếu
 ##### 2.2. Loại bỏ các cột không cần thiết
 ```sql
    ALTER TABLE mogi
-   DROP COLUMN Link, Title;
+   DROP COLUMN Link, Title,day;
 ```
 ##### 2.3. Định dạng lại kiểu dữ liệu cho đồng nhất
 
@@ -132,9 +132,10 @@ Tương tự cho các hàng còn lại. Có thể tham khảo cụ thể hơn �
 	from unidecode import unidecode
 ```
 Kiểm tra thông tin của dữ liệu:
-![image](https://github.com/user-attachments/assets/40a48e14-ccb8-4c89-842f-9a9bd918d714)
 
-Bộ dữ liệu này có 10785 dòng và không có giá trị null với 5 cột lần lượt là:
+![image](https://github.com/user-attachments/assets/8c30f4a7-7093-4e10-b965-9267e18724eb)
+
+Sau quá trình tiền xử lý thì bộ dữ liệu này có 10218 dòng và không có giá trị null với 5 cột lần lượt là:
 - Diện tích (Area)
 - Địa chỉ (Address)
 - Số phòng ngủ (Bedroom)
@@ -151,7 +152,7 @@ Mọi thứ đều được kiểm tra xong và bắt đầu xây dựng mô hì
 #### Thực hiện xây dựng mô hình dự đoán 
 - Bởi vì đây là bài toán dự đoán giá bất động sản nên kết quả đầu ra sẽ là các giá trị tiền tệ tương ứng với dữ liệu đầu vào, việc sử dụng các mô hình phân lớp Classification là không hợp lý. Chính vì thế nên chọn mô hình XGBRegressor.
 
-+ Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 30% dữ liệu sẽ được sử dụng trong bộ kiểm tra. Tham số Random_state được sử dụng để đảm bảo rằng việc phân chia có thể lặp lại được.
++ Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 25% dữ liệu sẽ được sử dụng trong bộ kiểm tra. 
 
 ``` python
 	#Tách biến độc lập và phụ thuộc | x: biến độc lập, y: biến phụ thuộc
@@ -183,6 +184,16 @@ Lưu mô hình thành file .pkl hoặc .sav tạo API và xây dựng web dự �
 	#pickle.dump(model, open('model_HR.pkl', 'wb'))
 	joblib.dump(model, open('model_HR.sav', 'wb'))
 ```
+### Xây dựng web dự đoán cho người dùng nhập thông tin và trả về giá trị dự đoán giá bất động sản
+
+Sử dụng Flask để xây dựng.
+Gồn 2 file:
+- Thứ nhất là Server.py chứa lệnh Khởi tạo Flask app và API để dự đoán giá
+- Thứ 2 lafile util.py chứa hàm dự đoán giá, xử lý giá trị của cột Province về từ dạng chữ về dạng số trong mô hình và lưu mô hình.
+- Sử dụng hàm "GET" để truyền tham số vào.
+- Khi chạy file Server, kết quả như sau là thành công:
+  ![image](https://github.com/user-attachments/assets/d03ce6b4-4708-4cb7-90f3-b87032e4a812)
+- Thực hiện truyền tham số cần thiết là Area, Bedroom,Bathroom và Province vào sau /get_predict_price ở đường dẫn được cung cấp trên các nền tảng web thì bạn sẽ nhận được kết quả dự đoán giá tương ứng. 
 
 
 
