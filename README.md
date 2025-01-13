@@ -7,9 +7,9 @@ Bất động sản đóng vai trò quan trọng trong nền kinh tế Việt Na
 Việc định giá bất động sản phụ thuộc vào nhiều yếu tố như thị trường, thị yếu người tiêu dùng, diện tích, vị trí căn hộ, hướng, tầm nhìn và khoảng cách đến các tiện ích xã hội. Những yếu tố này ảnh hưởng trực tiếp đến giá bán nhà ở. Do đó việc nghiên cứu và phân tích các yếu tố ảnh hưởng đến giá bất động sản tại nơi đây là cần thiết để dự báo xu hướng thị trường và hỗ trợ các quyết định đầu tư, phát triển và quản lý bất động sản, từ đó đóng góp vào sự phát triển bền vững của xã hội và môi trường.
 
 ## Tổng quan quy trình thực hiện 🎯🎯🎯
-1. [Thu thập dữ liệu](#Thu-thập-dữ-liệu)
-2. [Tiền xử lý dữ liệu](#Tiền-xử-lý-dữ-liệu)
-3. [Xây dựng mô hình dự đoán](#Xây-dựng-mô-hình-dự-đoán)
+1. Thu thập dữ liệu
+2. Tiền xử lý dữ liệu
+3. Xây dựng mô hình dự đoán
 4. Xây dựng web để người dùng dự đoán giá
    
 ## 1. Thu thập dữ liệu 
