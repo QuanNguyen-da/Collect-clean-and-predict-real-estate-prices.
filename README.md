@@ -100,20 +100,7 @@ Dữ liệu không có giá trị bị thiếu
    set address_final=N'Hòa Vang'
    where address_final like N'n Hoà Vang'
    
-   alter table mogiok
-   add  Address_ma_hoa int
 
-   UPDATE mogiok
-   SET Address_ma_hoa = CASE 
-       WHEN address_final = N'HảiChâu' THEN 1
-       WHEN address_final = N'LiênChiểu' THEN 2
-       WHEN address_final = N'NgũHànhSơn' THEN 3
-       WHEN address_final = N'CẩmLệ' THEN 4
-       WHEN address_final = N'SơnTrà' THEN 5
-       WHEN address_final = N'ThanhKhê' THEN 6
-       WHEN address_final = N'Hòa Vang' THEN 7
-       ELSE NULL
-   END;
 ```
 
 ##### 2.4. Xử lý các giá trị Giá
@@ -133,51 +120,69 @@ Tương tự cho các hàng còn lại. Có thể tham khảo cụ thể hơn �
 
 
 ## 3. Xây dựng mô hình dự đoán
-Đầu tiên, ta chuẩn bị môi trường để thực hiện các tác vụ liên quan đến mô hình cây quyết định và đánh giá hiệu suất của nó trong bài toán phân loại, bao gồm:
-
-+ Thư viện pandas
-+ Thư viện Matplotlib.pyplot, seaborn để vẽ biểu đồ và đồ thị.
-+ Import module model_selection từ thư viện scikit-learn. Module này thường được sử dụng để chia dữ liệu thành các tập huấn luyện và tập kiểm tra.
-+ Import hàm classification_report từ module metrics trong scikit-learn. Hàm này cung cấp báo cáo chi tiết về hiệu suất của mô hình phân loại.
-+ Import hàm accuracy_score từ module metrics trong scikit-learn. Hàm này tính toán độ chính xác của mô hình.
+Đầu tiên, ta chuẩn bị môi trường để thực hiện các tác vụ liên quan đến mô hình dự đoán và đánh giá hiệu suất của nó, bao gồm:
 
 ```python
 	import pandas as pd
-	import numpy as np
-	import matplotlib.pyplot as plt
-	import seaborn as sns
-	from sklearn import linear_model
+	from sklearn.model_selection import train_test_split
+	from sklearn.preprocessing import OrdinalEncoder
+	from xgboost import XGBRegressor
+	from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+	from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+	from unidecode import unidecode
 ```
-Bộ dữ liệu này có 10796 dòng với 5 cột lần lượt là:
+Kiểm tra thông tin của dữ liệu:
+![image](https://github.com/user-attachments/assets/40a48e14-ccb8-4c89-842f-9a9bd918d714)
+
+Bộ dữ liệu này có 10785 dòng và không có giá trị null với 5 cột lần lượt là:
 - Diện tích (Area)
 - Địa chỉ (Address)
 - Số phòng ngủ (Bedroom)
 - Số phòng tắm (Bathroom)
 - Giá nhà (Price).
 
-Mã hoá 13 tỉnh/thành phố ở cột “Address” về dạng số (từ 0 đến 12), ta được bảng mới như sau:
+Đối với cột Address dùng hàm loại bỏ dấu và khoảng trắng để thuận tiện cho việc mã hóa sau này.Và đổi thành Province vì chỉ lấy các giá trị tỉnh thành.
 
-```python
-	df['Address']=df['Address'].astype('category')
-	df['Address']=df['Address'].cat.codes
-```
-Tiếp theo xem xét mối quan hệ tương quan, tác động lẫn nhau giữa các biến. 
+Thực hiện kiểm tra các giá trị ngoại lai bằng Box Plot và thay thế bằng các giá trị hợp lý. Sau đó cần xem xét mối quan hệ giữa các biến bằng biểu đồ phân tán và heatmap. 
 
-Sau đó gán mức giá của các ngôi nhà ở cột “Price” cho 3 nhãn “Low”, “Medium” và “High” lần lượt là các mức giá thấp, trung bình, cao và tạo thêm cột mới “price_label” với quy định:
-+ Ngôi nhà có mức giá thấp (Low) sẽ có giá dưới 10 tỷ đồng.
-+ Ngôi nhà có mức giá trung bình (Medium) có giá từ 10-50 tỷ đồng.
-+ Ngôi nhà có mức giá cao (High) có giá trên 50 tỷ đồng.
+Mọi thứ đều được kiểm tra xong và bắt đầu xây dựng mô hình dự đoán. 
 
-Số giá trị ở mỗi phân lớp như sau:
-+ Có 6192 ngôi nhà có mức giá thấp.
-+ Có 3585 ngôi nhà có mức giá trung bình.
-+ Có 1019 ngôi nhà có mức giá cao.
   
 #### Thực hiện xây dựng mô hình dự đoán 
 - Bởi vì đây là bài toán dự đoán giá bất động sản nên kết quả đầu ra sẽ là các giá trị tiền tệ tương ứng với dữ liệu đầu vào, việc sử dụng các mô hình phân lớp Classification là không hợp lý. Chính vì thế nên chọn mô hình XGBRegressor.
 
 + Hàm train_test_split được sử dụng để phân chia các biến X (4 cột đầu tiên) và Y (cột “price_label”) thành các tập huấn luyện và kiểm tra. Tham số test_size chỉ định tỷ lệ dữ liệu được sử dụng trong bộ thử nghiệm. Trong trường hợp này, 30% dữ liệu sẽ được sử dụng trong bộ kiểm tra. Tham số Random_state được sử dụng để đảm bảo rằng việc phân chia có thể lặp lại được.
 
+``` python
+	#Tách biến độc lập và phụ thuộc | x: biến độc lập, y: biến phụ thuộc
+	x=df.drop('Price',axis=1)
+	y=df[['Price']]
+	#Chia dữ liệu thành tập huấn luyện và tập test
+	x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.25)
+```
+
+Mô hình chỉ nhận giá trị số nên đối với cột Province dùng `OrdinalEncoder` để mã hóa.
+```python
+	encoder=OrdinalEncoder()
+	encoder.fit(x_train[['Province']])
+	x_train[['Province']]=encoder.transform(x_train[['Province']])
+	x_test[['Province']]=encoder.transform(x_test[['Province']])
+```
+Độ chính xác của mô hình là 70%, có thể chấp nhận được.
+
+Tạo file json chứa danh sách gồm các tỉnh:
+
+```python
+	provinces = {'Provinces_value': list(x['Province'].unique())}
+	with open('Provinces_value.json', 'w') as f:
+	    f.write(json.dumps(provinces))
+
+```
+Lưu mô hình thành file .pkl hoặc .sav tạo API và xây dựng web dự đoán. 
+```python
+	#pickle.dump(model, open('model_HR.pkl', 'wb'))
+	joblib.dump(model, open('model_HR.sav', 'wb'))
+```
 
 
 
